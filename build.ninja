@@ -1,0 +1,21 @@
+ninja_required_version = 1.5
+
+rule cc
+    description = Compiling $in
+    command = c++ -std=c++17 -O3 -march=native -pipe -Wall -Wextra -Wconversion -Wpedantic -Wno-sign-compare -fopenmp -fPIC -flto -c -o $out $in
+
+rule link
+    description = Linking $in
+    command = c++ -std=c++17 -O3 -march=native -pipe -Wall -Wextra -Wconversion -Wpedantic -Wno-sign-compare -fopenmp -fPIC -flto -pie $in -Wl,-R. -o $out
+
+rule run
+    description = Running $in
+    command = ./$in
+    pool = console
+
+build main.o: cc main.cpp
+build main.x: link main.o
+
+build run: run main.x
+
+default run
